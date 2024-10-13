@@ -27,21 +27,61 @@
     <script defer src="script.js"></script>
   </head>
 
-  <body>
-     <h1 class="mb-5">Store Rental Identification System (SRRS)</h1>
-     <video id="video" autoplay></video>
-     <button id="btnTakePicture">
-        <i class="fa-solid fa-camera"></i> Take Picture
-     </button>
-     <canvas id="canvas"></canvas>
-     <form id="formTennant">
-        <label for="inputICNumber" class="form-label text-start">
-           Enter your Identification Card Number:
-        </label>
-        <input type="text" id="inputICNumber" placeholder="Example: 000123456789"/>
-        <button id="btnSubmit" type="submit">
-           Submit
+  <body class="py-5">
+    <div class="container d-flex justify-content-center align-items-center">
+      <!-- Responsive column sizing with Bootstrap -->
+      <div class="col-12 col-md-10 col-lg-8 p-5 text-center form_container">
+        <h1 class="mb-5">Store Rental Identification System (SRRS)</h1>
+
+        <div class="mb-3">
+          <video id="video" autoplay></video>
+        </div>
+
+        <button
+          id="btnTakePicture"
+          disabled
+          class="btn btn-primary btn-lg mb-3"
+        >
+          <i class="fa-solid fa-camera"></i> Take Picture
         </button>
-      </form>
+
+        <div class="mb-3">
+          <canvas id="canvas"></canvas>
+        </div>
+
+        <form id="formTennant" class="mt-5">
+          <div class="mb-3 text-start">
+            <label for="inputICNumber" class="form-label text-start">
+              Enter your Identification Card Number:
+            </label>
+            <input
+              type="text"
+              class="form-control form-control-lg"
+              id="inputICNumber"
+              placeholder="Example: 000123456789"
+            />
+          </div>
+          <button
+            id="btnSubmit"
+            type="submit"
+            disabled
+            class="btn btn-success btn-lg w-100"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- <h1>Webcam Capture</h1>
+    <video
+      id="video"
+      style="border: 2px solid black"
+      width="640"
+      height="480"
+      autoplay
+    ></video>
+    <button id="snap">Take Picture</button>
+    <canvas id="canvas" width="640" height="480"></canvas> -->
   </body>
 </html>
