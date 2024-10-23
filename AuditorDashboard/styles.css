@@ -1,1 +1,204 @@
+:root {
+    --color-yellow: #ffb545;
+    --color-green: #00c46a;
+    --color-red: #ff0000;
 
+    --color-dark--1: #2d3439;
+    --color-dark--2: #42484d;
+    --color-light--1: #aaa;
+    --color-light--2: #ececec;
+    --color-light--3: rgb(214, 222, 224);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Manrope', sans-serif;
+    color: var(--color-light--2);
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+    overscroll-behavior-y: none;
+
+    background-color: #fff;
+    padding: 2.5rem;
+
+    display: flex;
+}
+
+/* GENERAL */
+a:link,
+a:visited {
+    color: var(--color-brand--1);
+}
+
+/* SIDEBAR */
+.sidebar {
+    flex-basis: 50rem;
+    background-color: var(--color-dark--1);
+    padding: 3rem 5rem 4rem 5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    height: 5.2rem;
+    align-self: center;
+    margin-bottom: 4rem;
+}
+
+/* workouts */
+.details {
+    list-style: none;
+    height: 77vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.details::-webkit-scrollbar {
+    width: 0;
+}
+
+.detail {
+    background-color: var(--color-dark--2);
+    border-radius: 5px;
+    padding: 1.5rem 2.25rem;
+    margin-bottom: 1.75rem;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+}
+.detail--red {
+    border-left: 5px solid var(--color-red);
+}
+.detail--yellow {
+    border-left: 5px solid var(--color-yellow);
+}
+.detail--green {
+    border-left: 5px solid var(--color-green);
+}
+
+.detail__title {
+    font-size: 1.7rem;
+    font-weight: 600;
+    grid-column: 1 / -1;
+}
+
+.tennant_image {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.copyright {
+    margin-top: auto;
+    font-size: 1.3rem;
+    text-align: center;
+    color: var(--color-light--1);
+}
+
+/* MAP */
+#map {
+    flex: 1;
+    min-height: 50vh;
+    background-color: var(--color-light--1);
+    width: 100%;
+}
+
+/* Popup width is defined in JS using options */
+.leaflet-popup .leaflet-popup-content-wrapper {
+    background-color: var(--color-dark--1);
+    color: var(--color-light--2);
+    border-radius: 5px;
+    padding-right: 0.6rem;
+}
+
+.leaflet-popup .leaflet-popup-content {
+    font-size: 1.5rem;
+}
+
+.leaflet-popup .leaflet-popup-tip {
+    background-color: var(--color-dark--1);
+}
+
+.red-popup .leaflet-popup-content-wrapper {
+    border-left: 5px solid var(--color-red);
+}
+.yellow-popup .leaflet-popup-content-wrapper {
+    border-left: 5px solid var(--color-yellow);
+}
+.green-popup .leaflet-popup-content-wrapper {
+    border-left: 5px solid var(--color-green);
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 1200px) {
+    html {
+        font-size: 56.25%; /* 1rem = 9px (16px * 0.5625 = 9px) */
+    }
+
+    body {
+        flex-direction: column-reverse;
+        padding: 1rem;
+    }
+
+    .sidebar {
+        flex-basis: auto;
+        width: 100%;
+        padding: 2rem;
+    }
+
+    #map {
+        min-height: 70vh;
+        width: 100%;
+    }
+
+    .form__row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form__label {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Even smaller screens, like mobile phones */
+@media (max-width: 480px) {
+    html {
+        font-size: 50%; /* 1rem = 8px (16px * 0.5 = 8px) */
+    }
+
+    .sidebar {
+        padding: 1.5rem;
+    }
+
+    .logo {
+        height: 4rem;
+        margin-bottom: 2rem;
+    }
+
+    .form__input {
+        font-size: 1.2rem;
+    }
+
+    .workout {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    #map {
+        min-height: 50vh;
+    }
+}
