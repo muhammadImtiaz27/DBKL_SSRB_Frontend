@@ -1,5 +1,6 @@
 const details = document.querySelector('.details');
 const dropdown_menu = document.getElementById('dropdown_menu');
+const input_tennant_ic = document.getElementById('input_tennant_ic');
 
 // Make these two global variables, so we can access them in other functions, outside scope, still in this file btw.
 let map, mapEvent;
@@ -260,4 +261,29 @@ dropdown_menu.addEventListener('change', function () {
 
     displayAllMarkers();
     displayAllDetails();
+});
+
+input_tennant_ic.addEventListener('keydown', function (event) {
+    // Check if the user pressed the Enter key
+    if (event.key == 'Enter') {
+        // Get the input value
+        const tennant_ic = input_tennant_ic.value;
+        console.log(tennant_ic);
+
+        // Clear the array first
+        arr_filtered_data.length = 0;
+
+        // Find the object where its "ic" property is equal to the input provided by the user
+        for (const curr_tenant of arr_of_tennant) {
+            if (curr_tenant.ic == tennant_ic) {
+                arr_filtered_data.push(curr_tenant);
+            }
+        }
+
+        removeMarkers();
+        removeDetails();
+
+        displayAllMarkers();
+        displayAllDetails();
+    }
 });
