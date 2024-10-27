@@ -1,10 +1,12 @@
 const details = document.querySelector('.details');
+const dropdown_menu = document.getElementById('dropdown_menu');
 
 // Make these two global variables, so we can access them in other functions, outside scope, still in this file btw.
 let map, mapEvent;
 
 // Data obtained from database
-let arr_of_tennant = [
+// Keep this array unchanged
+const arr_of_tennant = [
     {
         ic: '000123456789',
         currStatus: 'good',
@@ -26,22 +28,77 @@ let arr_of_tennant = [
         lat: 5.451115939009762,
         lng: 100.19514083862306,
     },
+    {
+        ic: '000643674326',
+        currStatus: 'good',
+        image: 'tennant_image_placeholder.jpg',
+        lat: 5.401502764281,
+        lng: 100.29951095581055,
+    },
+    {
+        ic: '123456788765',
+        currStatus: 'warning',
+        image: 'tennant_image_placeholder.jpg',
+        lat: 5.411450504069681,
+        lng: 100.28766632080078,
+    },
+    {
+        ic: '567456323455',
+        currStatus: 'error',
+        image: 'tennant_image_placeholder.jpg',
+        lat: 5.421115939009762,
+        lng: 100.19514083862306,
+    },
+    {
+        ic: '085321456789',
+        currStatus: 'good',
+        image: 'tennant_image_placeholder.jpg',
+        lat: 5.431502764281349,
+        lng: 100.29951095581055,
+    },
+    {
+        ic: '125643189065',
+        currStatus: 'warning',
+        image: 'tennant_image_placeholder.jpg',
+        lat: 5.441450504069681,
+        lng: 100.28766632080078,
+    },
+    {
+        ic: '000723451277',
+        currStatus: 'error',
+        image: 'tennant_image_placeholder.jpg',
+        lat: 5.471115939009762,
+        lng: 100.19514083862306,
+    },
 ];
+
+// Store some markers in an array.
+// We will use this array to remove markers from the map.
+let arr_of_markers = [];
+
+// Use this array to display tennants information and markers
+// You can change this array
+// When launching the website for the first time, it will display all tenants
+// Use spread operator to make a shallow copy
+let arr_filtered_data = [...arr_of_tennant];
 
 // Display all markers
 function displayAllMarkers() {
-    for (const currTenant of arr_of_tennant) {
+    for (const currTenant of arr_filtered_data) {
         let popupStyle;
 
+        //prettier-ignore
         if (currTenant.currStatus == 'good') {
             popupStyle = 'green-popup';
-        } else if (currTenant.currStatus == 'warning') {
+        } 
+        else if (currTenant.currStatus == 'warning') {
             popupStyle = 'yellow-popup';
-        } else {
+        } 
+        else {
             popupStyle = 'red-popup';
         }
 
-        L.marker([currTenant.lat, currTenant.lng])
+        let marker = L.marker([currTenant.lat, currTenant.lng])
             .addTo(map)
             .bindPopup(
                 L.popup({
@@ -52,19 +109,24 @@ function displayAllMarkers() {
             )
             .setPopupContent(currTenant.ic)
             .openPopup();
+
+        arr_of_markers.push(marker);
     }
 }
 
 // Display all details
 function displayAllDetails() {
-    for (const currTenant of arr_of_tennant) {
+    // prettier-ignore
+    for (const currTenant of arr_filtered_data) {
         let detailStyle;
 
         if (currTenant.currStatus == 'good') {
             detailStyle = 'detail--green';
-        } else if (currTenant.currStatus == 'warning') {
+        } 
+        else if (currTenant.currStatus == 'warning') {
             detailStyle = 'detail--yellow';
-        } else {
+        } 
+        else {
             detailStyle = 'detail--red';
         }
 
@@ -129,3 +191,73 @@ else {
     alert('Geolocation is not supported by this browser.');
 }
 
+function removeDetails() {
+    // Remove all child elements of detail element
+    // In other words, remove all <li> elements inside the <ul> elements
+    details.innerHTML = '';
+}
+
+function removeMarkers() {
+    for (var i = 0; i < arr_of_markers.length; i++) {
+        map.removeLayer(arr_of_markers[i]);
+    }
+    arr_of_markers = []; // Clear the array after removing markers
+}
+
+dropdown_menu.addEventListener('change', function () {
+    const selected_item = dropdown_menu.value;
+    console.log(selected_item);
+
+    arr_filtered_data.length = 0;
+
+    // Use spread operator to make a shallow copy of an array
+    // arr_filtered_data = [...arr_of_tennant];
+
+    // prettier-ignore
+    if (selected_item == 'default') {
+        arr_filtered_data = [...arr_of_tennant];
+    } 
+
+    else if(selected_item == "good to error"){
+
+        arr_filtered_data = [...arr_of_tennant];
+
+        // Define the order for the status
+        const statusOrder = { good: 1, warning: 2, error: 3 };
+
+        // Sort the array based on status
+        arr_filtered_data.sort((a, b) => {
+            return statusOrder[a.currStatus] - statusOrder[b.currStatus];
+        });
+    }
+
+    else if(selected_item == "error to good"){
+
+        arr_filtered_data = [...arr_of_tennant];
+
+        // Define the order for the status
+        const statusOrder = { error: 1, warning: 2, good: 3 };
+
+        // Sort the array based on status
+        arr_filtered_data.sort((a, b) => {
+            return statusOrder[a.currStatus] - statusOrder[b.currStatus];
+        });
+
+    }
+
+    else {
+        for (const curr_tenant of arr_of_tennant) {
+            if (curr_tenant.currStatus == selected_item) {
+                arr_filtered_data.push(curr_tenant);
+            }
+        }
+    }
+
+    console.log(arr_filtered_data);
+
+    removeMarkers();
+    removeDetails();
+
+    displayAllMarkers();
+    displayAllDetails();
+});
