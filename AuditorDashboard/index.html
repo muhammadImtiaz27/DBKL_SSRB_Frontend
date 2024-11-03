@@ -36,8 +36,8 @@
         Its important to include your script.js file after including the leaflet cdn
         The script.js is where we will use the leaflet library
         By the time script.js is loaded, the browser must already have downloaded Leaflet library
-        because otherwise our code will not be able to work without library.
-    -->
+        because otherwise our code will not be able to work without library. -->
+
         <!-- My javascript script file -->
         <script defer src="script.js"></script>
 
@@ -47,8 +47,8 @@
     <body>
         <div class="sidebar">
             <label class="form__label">Search Tennant</label>
-            <input text="text" id="input_tennant_ic" class="form__input" placeholder="IC Number" enterkeyhint="Search"/>
-            
+            <input text="text" id="input_tennant_ic" class="form__input" placeholder="IC Number" enterkeyhint="Search" />
+
             <label class="form__label">Sort/Filter Tennants:</label>
             <select id="dropdown_menu" class="form__input">
                 <option value="default">Display All</option>
@@ -62,6 +62,27 @@
             <ul class="details"></ul>
         </div>
 
-        <div id="map"></div>
+        <div id="map">
+            <button class="btn_change_map_style">Change Map Style</button>
+        </div>
+
+        <!-- Modal structure -->
+        <div class="modal-overlay" id="myModal">
+            <div class="modal-content">
+                <span class="modal-close-button" id="closeModal">&times;</span>
+                <h2 class="modal-title">Select Map Style</h2>
+                
+                <p class="modal-subtitle">Open Street Map (Standard)</p>
+                <img id="img_OpenStreetMap_standard" src="open_street_map_standard.png" class="modal-img">
+                
+                <p class="modal-subtitle">Open TopoMap (Topographic)</p>
+                <img id="img_OpenTopoMap" src="open_topo_map.png" class="modal-img">
+                
+                <p class="modal-subtitle">Esri Satellite</p>
+                <img id="img_EsriSatellite" src="esri_satellite_map.png" class="modal-img">
+            </div>
+        </div>
+
+        </div>
     </body>
 </html>
