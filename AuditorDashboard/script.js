@@ -1,12 +1,7 @@
-const details = document.querySelector('.details');
-const dropdown_menu = document.getElementById('dropdown_menu');
-const input_tennant_ic = document.getElementById('input_tennant_ic');
-
 // Make these two global variables, so we can access them in other functions, outside scope, still in this file btw.
 let map, mapEvent;
 
-// Data obtained from database
-// Keep this array unchanged
+// Data obtained from database. Keep this array unchanged
 const arr_of_tennant = [
     {
         ic: '000123456789',
@@ -73,8 +68,7 @@ const arr_of_tennant = [
     },
 ];
 
-// Store some markers in an array.
-// We will use this array to remove markers from the map.
+// Store some markers in an array. We will use this array to remove markers from the map.
 let arr_of_markers = [];
 
 // Use this array to display tennants information and markers
@@ -82,6 +76,16 @@ let arr_of_markers = [];
 // When launching the website for the first time, it will display all tenants
 // Use spread operator to make a shallow copy
 let arr_filtered_data = [...arr_of_tennant];
+
+const details = document.querySelector('.details');
+const input_tennant_ic = document.getElementById('input_tennant_ic');
+const dropdown_menu = document.getElementById('dropdown_menu');
+const modal = document.getElementById('myModal');
+const btn_change_map_style = document.querySelector('.btn_change_map_style');
+const closeModalBtn = document.getElementById('closeModal');
+const img_OpenTopoMap = document.getElementById('img_OpenTopoMap');
+const img_OpenStreetMap_standard = document.getElementById('img_OpenStreetMap_standard');
+const img_EsriSatellite = document.getElementById('img_EsriSatellite');
 
 // Display all markers
 function displayAllMarkers() {
@@ -142,6 +146,19 @@ function displayAllDetails() {
     }
 }
 
+function removeDetails() {
+    // Remove all child elements of detail element
+    // In other words, remove all <li> elements inside the <ul> elements
+    details.innerHTML = '';
+}
+
+function removeMarkers() {
+    for (var i = 0; i < arr_of_markers.length; i++) {
+        map.removeLayer(arr_of_markers[i]);
+    }
+    arr_of_markers = []; // Clear the array after removing markers
+}
+
 // When Geolocation successfully get user's current location
 function success(position) {
     console.log(position);
@@ -182,29 +199,7 @@ function fail() {
     alert('Could not get your position.');
 }
 
-// Check if navigator exists (older browsers don't support navigator)
-// prettier-ignore
-if (navigator.geolocation) {
-    // If navigator exists, attempt to get user's current location.
-    navigator.geolocation.getCurrentPosition(success, fail);
-} 
-else {
-    alert('Geolocation is not supported by this browser.');
-}
-
-function removeDetails() {
-    // Remove all child elements of detail element
-    // In other words, remove all <li> elements inside the <ul> elements
-    details.innerHTML = '';
-}
-
-function removeMarkers() {
-    for (var i = 0; i < arr_of_markers.length; i++) {
-        map.removeLayer(arr_of_markers[i]);
-    }
-    arr_of_markers = []; // Clear the array after removing markers
-}
-
+// When the user select one of the items from the dropdown menu
 dropdown_menu.addEventListener('change', function () {
     const selected_item = dropdown_menu.value;
     console.log(selected_item);
@@ -263,6 +258,7 @@ dropdown_menu.addEventListener('change', function () {
     displayAllDetails();
 });
 
+// When the user press the enter key when typing something in the input_tennant_ic text field
 input_tennant_ic.addEventListener('keydown', function (event) {
     // Check if the user pressed the Enter key
     if (event.key == 'Enter') {
@@ -287,3 +283,87 @@ input_tennant_ic.addEventListener('keydown', function (event) {
         displayAllDetails();
     }
 });
+
+// Open modal on button click
+btn_change_map_style.addEventListener('click', function (event) {
+    modal.style.display = 'flex';
+});
+
+// Close modal on close button click
+closeModalBtn.addEventListener('click', function (event) {
+    modal.style.display = 'none';
+});
+
+// Close modal when clicking outside of modal content
+window.addEventListener('click', function (event) {
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+});
+
+// When the user click Open Street Map (Standard) image
+img_OpenStreetMap_standard.addEventListener('click', function () {
+    // Remove existing layers
+    map.eachLayer((l) => map.removeLayer(l));
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17,
+        attribution: '© OpenTopoMap contributors',
+    }).addTo(map);
+
+    removeMarkers();
+    removeDetails();
+
+    displayAllMarkers();
+    displayAllDetails();
+
+    modal.style.display = 'none';
+});
+
+// When the user click Open Topo Map image
+img_OpenTopoMap.addEventListener('click', function () {
+    // Remove existing layers
+    map.eachLayer((l) => map.removeLayer(l));
+
+    L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17,
+        attribution: '© OpenTopoMap contributors',
+    }).addTo(map);
+
+    removeMarkers();
+    removeDetails();
+
+    displayAllMarkers();
+    displayAllDetails();
+
+    modal.style.display = 'none';
+});
+
+// When the user click Esri Satellite image
+img_EsriSatellite.addEventListener('click', function () {
+    // Remove existing layers
+    map.eachLayer((l) => map.removeLayer(l));
+
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 17,
+        attribution: '© Esri & the GIS User Community',
+    }).addTo(map);
+
+    removeMarkers();
+    removeDetails();
+
+    displayAllMarkers();
+    displayAllDetails();
+
+    modal.style.display = 'none';
+});
+
+// Check if navigator exists (older browsers don't support navigator)
+// prettier-ignore
+if (navigator.geolocation) {
+    // If navigator exists, attempt to get user's current location.
+    navigator.geolocation.getCurrentPosition(success, fail);
+} 
+else {
+    alert('Geolocation is not supported by this browser.');
+}
