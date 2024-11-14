@@ -3,70 +3,72 @@ let map, mapEvent;
 
 // Data obtained from database. Keep this array unchanged
 const arr_of_tennant = [
-    {
-        ic: '000123456789',
-        currStatus: 'good',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.391502764281349,
-        lng: 100.29951095581055,
-    },
-    {
-        ic: '123445567899',
-        currStatus: 'warning',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.341450504069681,
-        lng: 100.28766632080078,
-    },
-    {
-        ic: '123125365758',
-        currStatus: 'error',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.451115939009762,
-        lng: 100.19514083862306,
-    },
-    {
-        ic: '000643674326',
-        currStatus: 'good',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.401502764281,
-        lng: 100.29951095581055,
-    },
-    {
-        ic: '123456788765',
-        currStatus: 'warning',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.411450504069681,
-        lng: 100.28766632080078,
-    },
-    {
-        ic: '567456323455',
-        currStatus: 'error',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.421115939009762,
-        lng: 100.19514083862306,
-    },
-    {
-        ic: '085321456789',
-        currStatus: 'good',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.431502764281349,
-        lng: 100.29951095581055,
-    },
-    {
-        ic: '125643189065',
-        currStatus: 'warning',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.441450504069681,
-        lng: 100.28766632080078,
-    },
-    {
-        ic: '000723451277',
-        currStatus: 'error',
-        image: 'tennant_image_placeholder.jpg',
-        lat: 5.471115939009762,
-        lng: 100.19514083862306,
-    },
+    // {
+    //     ic: '000123456789',
+    //     currStatus: 'good',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.391502764281349,
+    //     lng: 100.29951095581055,
+    // },
+    // {
+    //     ic: '123445567899',
+    //     currStatus: 'warning',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.341450504069681,
+    //     lng: 100.28766632080078,
+    // },
+    // {
+    //     ic: '123125365758',
+    //     currStatus: 'error',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.451115939009762,
+    //     lng: 100.19514083862306,
+    // },
+    // {
+    //     ic: '000643674326',
+    //     currStatus: 'good',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.401502764281,
+    //     lng: 100.29951095581055,
+    // },
+    // {
+    //     ic: '123456788765',
+    //     currStatus: 'warning',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.411450504069681,
+    //     lng: 100.28766632080078,
+    // },
+    // {
+    //     ic: '567456323455',
+    //     currStatus: 'error',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.421115939009762,
+    //     lng: 100.19514083862306,
+    // },
+    // {
+    //     ic: '085321456789',
+    //     currStatus: 'good',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.431502764281349,
+    //     lng: 100.29951095581055,
+    // },
+    // {
+    //     ic: '125643189065',
+    //     currStatus: 'warning',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.441450504069681,
+    //     lng: 100.28766632080078,
+    // },
+    // {
+    //     ic: '000723451277',
+    //     currStatus: 'error',
+    //     image: 'tennant_image_placeholder.jpg',
+    //     lat: 5.471115939009762,
+    //     lng: 100.19514083862306,
+    // },
 ];
+
+
 
 // Store some markers in an array. We will use this array to remove markers from the map.
 let arr_of_markers = [];
@@ -75,7 +77,37 @@ let arr_of_markers = [];
 // You can change this array
 // When launching the website for the first time, it will display all tenants
 // Use spread operator to make a shallow copy
-let arr_filtered_data = [...arr_of_tennant];
+let arr_filtered_data = [];
+async function fetchData() {
+    try {
+        const response = await fetch('http://192.168.2.128:4000/tenant'); // Replace with your API URL
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        
+        // Process the data to extract IC, status, and location (latitude and longitude)
+        const processedData = data.map(item => {
+            const { IC, status, location } = item;
+            const [lng, lat] = location.coordinates;
+            return {
+                ic: IC,
+                currStatus: status,
+                image: Image, // Default image
+                lat: lat,
+                lng: lng
+            };
+        });
+
+        arr_of_tennant.push(...processedData);
+        arr_filtered_data.push(...processedData);
+        console.log(arr_of_tennant); // Display the processed data in the console
+    } catch (error) {
+        console.error('There has been a problem with your fetch operation:', error);
+    }
+}
+
+fetchData();
 
 const details = document.querySelector('.details');
 const input_tennant_ic = document.getElementById('input_tennant_ic');
@@ -93,10 +125,10 @@ function displayAllMarkers() {
         let popupStyle;
 
         //prettier-ignore
-        if (currTenant.currStatus == 'good') {
+        if (currTenant.currStatus == 'Green') {
             popupStyle = 'green-popup';
         } 
-        else if (currTenant.currStatus == 'warning') {
+        else if (currTenant.currStatus == 'Yellow') {
             popupStyle = 'yellow-popup';
         } 
         else {
@@ -125,10 +157,10 @@ function displayAllDetails() {
     for (const currTenant of arr_filtered_data) {
         let detailStyle;
 
-        if (currTenant.currStatus == 'good') {
+        if (currTenant.currStatus == 'Green') {
             detailStyle = 'detail--green';
         } 
-        else if (currTenant.currStatus == 'warning') {
+        else if (currTenant.currStatus == 'Yellow') {
             detailStyle = 'detail--yellow';
         } 
         else {
@@ -214,12 +246,12 @@ dropdown_menu.addEventListener('change', function () {
         arr_filtered_data = [...arr_of_tennant];
     } 
 
-    else if(selected_item == "good to error"){
+    else if(selected_item == "Green to Red"){
 
         arr_filtered_data = [...arr_of_tennant];
 
         // Define the order for the status
-        const statusOrder = { good: 1, warning: 2, error: 3 };
+        const statusOrder = { Green: 1, Yellow: 2, Red: 3 };
 
         // Sort the array based on status
         arr_filtered_data.sort((a, b) => {
@@ -227,12 +259,12 @@ dropdown_menu.addEventListener('change', function () {
         });
     }
 
-    else if(selected_item == "error to good"){
+    else if(selected_item == "Red to Green"){
 
         arr_filtered_data = [...arr_of_tennant];
 
         // Define the order for the status
-        const statusOrder = { error: 1, warning: 2, good: 3 };
+        const statusOrder = { Red: 1, Yellow: 2, Green: 3 };
 
         // Sort the array based on status
         arr_filtered_data.sort((a, b) => {
