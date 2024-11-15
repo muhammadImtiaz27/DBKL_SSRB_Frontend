@@ -80,7 +80,7 @@ let arr_of_markers = [];
 let arr_filtered_data = [];
 async function fetchData() {
     try {
-        const response = await fetch('http://192.168.2.128:4000/tenant'); // Replace with your API URL
+        const response = await fetch('http://10.3.226.73:4000/tenant'); // Replace with your API URL
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -88,12 +88,14 @@ async function fetchData() {
         
         // Process the data to extract IC, status, and location (latitude and longitude)
         const processedData = data.map(item => {
-            const { IC, status, location } = item;
+            const { IC, status, location, image } = item; // Ensure 'image' is part of the response
             const [lng, lat] = location.coordinates;
+            const imageURL = image; // Prepend base URL to image path
+            console.log('Image URL:', imageURL); // Log the image URL
             return {
                 ic: IC,
                 currStatus: status,
-                image: Image, // Default image
+                image: imageURL, // Use the absolute image URL
                 lat: lat,
                 lng: lng
             };
@@ -156,6 +158,7 @@ function displayAllDetails() {
     // prettier-ignore
     for (const currTenant of arr_filtered_data) {
         let detailStyle;
+        let image_URL = currTenant.image;
 
         if (currTenant.currStatus == 'Green') {
             detailStyle = 'detail--green';
@@ -167,12 +170,13 @@ function displayAllDetails() {
             detailStyle = 'detail--red';
         }
 
+        
         let htmlElement = `
-            <li class="detail ${detailStyle}">
-                <img src="tennant_image_placeholder.jpg" class="tennant_image" alt="something" />
-                <h2 class="detail__title">${currTenant.ic}</h2>
-            </li>
-        `;
+        <li class="detail ${detailStyle}">
+            <img src="${image_URL}" class="tennant_image" alt="Tenant Image" />
+            <h2 class="detail__title">${currTenant.ic}</h2>
+        </li>
+    `;
 
         details.insertAdjacentHTML('beforeend', htmlElement);
     }
