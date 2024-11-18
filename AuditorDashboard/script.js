@@ -258,16 +258,30 @@ dropdown_menu.addEventListener('change', function () {
     displayAllDetails();
 });
 
+// prettier-ignore
 // When the user press the enter key when typing something in the input_tennant_ic text field
-input_tennant_ic.addEventListener('keydown', function (event) {
-    // Check if the user pressed the Enter key
-    if (event.key == 'Enter') {
-        // Get the input value
-        const tennant_ic = input_tennant_ic.value;
-        console.log(tennant_ic);
+input_tennant_ic.addEventListener("keydown", function (event) {
 
-        // Clear the array first
-        arr_filtered_data.length = 0;
+  // Check if the user pressed the Enter key
+  if (event.key == "Enter") {
+    
+    const tennant_ic = input_tennant_ic.value; // Get the input value
+    arr_filtered_data.length = 0; // Clear the array
+
+    // Check if the input is empty
+    if (tennant_ic == "") {
+
+        console.log("Emtpy input");
+
+        // Empty input means display all user data
+        for (const curr_tenant of arr_of_tennant) {
+            arr_filtered_data.push(curr_tenant);
+        }
+
+    } 
+    else {
+
+        console.log(tennant_ic);
 
         // Find the object where its "ic" property is equal to the input provided by the user
         for (const curr_tenant of arr_of_tennant) {
@@ -275,15 +289,16 @@ input_tennant_ic.addEventListener('keydown', function (event) {
                 arr_filtered_data.push(curr_tenant);
             }
         }
-
-        removeMarkers();
-        removeDetails();
-
-        displayAllMarkers();
-        displayAllDetails();
     }
-});
+    
 
+    removeMarkers();
+    removeDetails();
+
+    displayAllMarkers();
+    displayAllDetails();
+  }
+});
 // Open modal on button click
 btn_change_map_style.addEventListener('click', function (event) {
     modal.style.display = 'flex';
